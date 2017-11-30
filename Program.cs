@@ -63,11 +63,20 @@ namespace one
             Task[] tasks = new Task[50];
             for (int i = 0; i < 50; i++)
             {
-                tasks[i] = serialization();
-                if(i>= 45)
-                {
-                    tasks[i] = deserialization();
-                }
+                tasks[i] = serialization();                
+            }
+
+            //await Task.WhenAll(tasks);
+
+        }
+
+        [Benchmark]
+        public void serializeAndDeserialize()
+        {
+            Task[] tasks = new Task[50];
+            for (int i = 0; i < 50; i++)
+            {
+                tasks[i] = deserialization();                
             }
 
             //await Task.WhenAll(tasks);
