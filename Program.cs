@@ -19,6 +19,8 @@ using System.IO;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace one
 {
@@ -27,10 +29,8 @@ namespace one
     {
 
         object[][] objects = SerializableObjects_MemberData().ToArray();
-
-
-        [Benchmark]
-        public void serialization()
+        
+        public async Task serialization()
         {
             MemoryStream s = new MemoryStream();
             BinaryFormatter f = new BinaryFormatter();
@@ -40,8 +40,8 @@ namespace one
             }
         }
 
-        [Benchmark]
-        public void deserialization()
+        //[Benchmark]
+        public async Task deserialization()
         {
             var s = new MemoryStream();
             var f = new BinaryFormatter();
@@ -55,6 +55,23 @@ namespace one
             {
                 object clone = f.Deserialize(s);
             }
+        }
+
+        [Benchmark]
+        public void serialize()
+        {
+            Task[] tasks = new Task[50];
+            for (int i = 0; i < 50; i++)
+            {
+                tasks[i] = serialization();
+                if(i>= 45)
+                {
+                    tasks[i] = deserialization();
+                }
+            }
+
+            //await Task.WhenAll(tasks);
+
         }
 
         public static IEnumerable<object[]> SerializableObjects_MemberData()
