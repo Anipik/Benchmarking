@@ -41,6 +41,11 @@ namespace one
             }
         }
 
+        public void hi()
+        {
+
+        }
+
         //[Benchmark]
         public void deserialization()
         {
@@ -63,34 +68,18 @@ namespace one
         public void serialize()
         {
             int num = 16;
-//            Task[] tasks = new Task[50];
-//            for (int i = 0; i < 50; i++)
-//            {
-//                tasks[i] = serialization();                
-//            }
-
-            //await Task.WhenAll(tasks);
-            var signals = new List<ManualResetEvent>();
             Thread[] threads = new Thread[num];
             for (int i = 0; i < num; i++)
             {
-                var signal = new ManualResetEvent(false);
-                signals.Add(signal);
-                threads[i] = new Thread(() => { serialization(); signal.Set();
-                });
-                threads[i].Start();
+                threads[i] = new Thread(() => hi() );
+                StartWork += new StartWorkHandler(() => threads[i].Start());
             }
-
- 
-
-            var completionTask = new Thread(() =>
-            {
-                WaitHandle.WaitAll(signals.ToArray());
-                CompletionWork();
-            });
-            completionTask.Start();
-            
+            StartWork();
         }
+
+        public delegate void StartWorkHandler();
+
+        public event StartWorkHandler StartWork;
 
         //[Benchmark]
         public void serializeAndDeserialize()
@@ -1411,10 +1400,6 @@ namespace one
 
         }
 
-        private void CompletionWork()
-        {
-            //Console.WriteLine("Completed Benchmark");
-        }
     }
 
     public class Program
