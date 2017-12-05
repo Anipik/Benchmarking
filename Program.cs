@@ -43,7 +43,7 @@ namespace one
 
         public void hi()
         {
-
+            Console.WriteLine("hi");
         }
 
         //[Benchmark]
@@ -67,14 +67,18 @@ namespace one
         [Benchmark]
         public void serialize()
         {
-            int num = 16;
-            Thread[] threads = new Thread[num];
+            int num = 8;
+            //Console.WriteLine(num);
             for (int i = 0; i < num; i++)
             {
-                threads[i] = new Thread(() => hi() );
-                StartWork += new StartWorkHandler(() => threads[i].Start());
+
+                StartWork += () =>
+                {
+                    Thread t = new Thread(() => serialization());
+                    t.Start();
+                };
             }
-            StartWork();
+            StartWork();  
         }
 
         public delegate void StartWorkHandler();
