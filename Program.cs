@@ -28,8 +28,18 @@ namespace one
     public class myformatternow
     {
 
-        //object[][] objects = SerializableObjects_MemberData().ToArray();
-        
+        static int num = 100 ;
+        List<Task> tasks  = new List<Task>();
+
+        [IterationSetup]
+        public void GlobalSetup()
+        {
+            for (int i = 0; i < num; i++)
+            {
+                tasks.Add(new Task(serialization));
+            }
+        }
+
         public void serialization()
         {
             object[][] objects = SerializableObjects_MemberData().ToArray();
@@ -41,61 +51,21 @@ namespace one
             }
         }
 
-        public void hi()
-        {
-            Console.WriteLine("hi");
-        }
-
-        //[Benchmark]
-        public void deserialization()
-        {
-            object[][] objects = SerializableObjects_MemberData().ToArray();
-            var s = new MemoryStream();
-            var f = new BinaryFormatter();
-
-            foreach (object[] obj in objects)
-            {
-                f.Serialize(s, obj[0]);
-            }
-            s.Position = 0;
-            foreach (object[] obj in objects)
-            {
-                object clone = f.Deserialize(s);
-            }
-        }
 
         [Benchmark]
-        public void serialize()
+        public async Task serialize()
         {
-            int num = 8;
-            //Console.WriteLine(num);
             for (int i = 0; i < num; i++)
             {
-
-                StartWork += () =>
-                {
-                    Thread t = new Thread(() => serialization());
-                    t.Start();
-                };
+                tasks[i].Start();
             }
-            StartWork();  
+            await Task.WhenAll(tasks);
         }
 
-        public delegate void StartWorkHandler();
-
-        public event StartWorkHandler StartWork;
-
-        //[Benchmark]
-        public void serializeAndDeserialize()
+        [IterationCleanup]
+        public void GlobalCleanup()
         {
-  //          Task[] tasks = new Task[50];
-            for (int i = 0; i < 50; i++)
-            {
-//                tasks[i] = deserialization();                
-            }
-
-            //await Task.WhenAll(tasks);
-
+            tasks.Clear();
         }
 
         private static IEnumerable<object[]> SerializableObjects_MemberData()

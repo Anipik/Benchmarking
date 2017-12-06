@@ -22,11 +22,11 @@ namespace one
                     customDotNetCliPath: @"E:\dotnet5\dotnet.exe",
                     name: "Core 2.1.0-preview1-25919-02")))
                 .WithLaunchCount(1)
-                .WithWarmupCount(3)
-                .WithInvocationCount(10)
-                .WithUnrollFactor(2)
+                .WithWarmupCount(1)
+                .WithInvocationCount(1)
+                .WithUnrollFactor(1)
                 .WithTargetCount(10)
-                .WithMaxRelativeError(0.1)
+                .WithMaxRelativeError(0.2)
                 .WithRemoveOutliers(true));
 
             Add(DefaultColumnProviders.Instance);
