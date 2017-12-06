@@ -26,7 +26,7 @@ namespace one
                 .WithInvocationCount(1)
                 .WithUnrollFactor(1)
                 .WithTargetCount(10)
-                .WithMaxRelativeError(0.2)
+                .WithMaxRelativeError(0.01)
                 .WithRemoveOutliers(true));
 
             Add(DefaultColumnProviders.Instance);
