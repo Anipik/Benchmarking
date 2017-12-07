@@ -28,10 +28,10 @@ namespace one
     public class myformatternow
     {
 
-        static int num = 500;
+        static int num = 4000;
         List<Task> tasks = new List<Task>();
         static BinaryFormatter f = new BinaryFormatter();
-        //MemoryStream s ;
+        static MemoryStream s = new MemoryStream() ;
 
         [IterationSetup]
         public void GlobalSetup()
@@ -68,18 +68,8 @@ namespace one
         public void GlobalCleanup()
         {
             tasks.Clear();
-            //await s.FlushAsync();
-            //Console.WriteLine("hi");
-            //Console.WriteLine(s.GetBuffer().ToString());
-            //Console.WriteLine(s.Length);
-            //Console.WriteLine(s.Capacity);
-            //s.Position = 0;
-            //s.Capacity = 0;
-            //Console.WriteLine(s.Length);
-            //s.Seek(0, SeekOrigin.Begin);
-            //s.SetLength = 0;
-            //s.Close();
-            //s.Dispose();
+            s = new MemoryStream();
+            f = new BinaryFormatter();
         }
 
         private static IEnumerable<object[]> SerializableObjects()
